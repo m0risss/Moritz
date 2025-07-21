@@ -1,0 +1,2489 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moritz' School Tools - Deine digitale Lernzentrale</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-blue: #2563eb;
+            --secondary-blue: #3b82f6;
+            --light-blue: #dbeafe;
+            --dark-blue: #1e40af;
+            --white: #ffffff;
+            --light-gray: #f8fafc;
+            --medium-gray: #64748b;
+            --dark-gray: #334155;
+            --gradient: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+            --game-gradient: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--light-gray);
+            color: var(--dark-gray);
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: var(--white);
+            box-shadow: 0 4px 20px rgba(37, 99, 235, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid var(--light-blue);
+        }
+
+        .nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(37, 99, 235, 0.3);
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            color: var(--dark-gray);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-blue);
+            transform: translateY(-2px);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background: var(--gradient);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .nav-link.active {
+            color: var(--primary-blue);
+        }
+
+        .nav-link.active::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: var(--gradient);
+            padding: 8rem 2rem 4rem;
+            text-align: center;
+            color: var(--white);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: float 20s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateX(-50px) translateY(-50px); }
+            100% { transform: translateX(-50px) translateY(-100px); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            animation: slideInDown 1s ease-out;
+        }
+
+        @keyframes slideInDown {
+            from { opacity: 0; transform: translateY(-50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            animation: slideInUp 1s ease-out 0.3s both;
+        }
+
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Section Headers */
+        .section {
+            padding: 4rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: var(--medium-gray);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Games Section */
+        .games-section .section-title {
+            background: var(--game-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .tools-grid, .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .tool-card, .game-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 40px rgba(37, 99, 235, 0.1);
+            border: 2px solid transparent;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-card {
+            box-shadow: 0 10px 40px rgba(139, 92, 246, 0.1);
+        }
+
+        .tool-card::before, .game-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(37, 99, 235, 0.1), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .game-card::before {
+            background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.1), transparent);
+        }
+
+        .tool-card:hover::before, .game-card:hover::before {
+            left: 100%;
+        }
+
+        .tool-card:hover, .game-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(37, 99, 235, 0.2);
+            border-color: var(--light-blue);
+        }
+
+        .game-card:hover {
+            box-shadow: 0 20px 60px rgba(139, 92, 246, 0.2);
+            border-color: #e9d5ff;
+        }
+
+        .tool-header, .game-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .tool-icon, .game-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--gradient);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            font-size: 1.5rem;
+            color: var(--white);
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+        }
+
+        .game-icon {
+            background: var(--game-gradient);
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+        }
+
+        .tool-title, .game-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: var(--dark-blue);
+        }
+
+        .tool-content, .game-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Calculator */
+        .calculator {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 1rem;
+        }
+
+        .calc-display {
+            grid-column: span 4;
+            background: var(--light-gray);
+            border: 2px solid var(--light-blue);
+            border-radius: 10px;
+            padding: 1rem;
+            font-size: 1.5rem;
+            text-align: right;
+            margin-bottom: 10px;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        .calc-btn, .game-btn {
+            background: var(--white);
+            border: 2px solid var(--light-blue);
+            border-radius: 10px;
+            padding: 15px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .calc-btn:hover, .game-btn:hover {
+            background: var(--light-blue);
+            transform: scale(1.05);
+        }
+
+        .calc-btn.operator {
+            background: var(--secondary-blue);
+            color: var(--white);
+        }
+
+        .calc-btn.operator:hover {
+            background: var(--dark-blue);
+        }
+
+        /* Timer */
+        .timer-display {
+            font-size: 2.5rem;
+            font-weight: bold;
+            text-align: center;
+            color: var(--primary-blue);
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .timer-controls, .game-controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .timer-btn {
+            background: var(--gradient);
+            color: var(--white);
+            border: none;
+            border-radius: 25px;
+            padding: 12px 25px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+        }
+
+        .timer-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+        }
+
+        .timer-input {
+            width: 60px;
+            padding: 8px;
+            border: 2px solid var(--light-blue);
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1rem;
+        }
+
+        /* Todo List */
+        .todo-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid var(--light-blue);
+            border-radius: 15px;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .todo-input:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .todo-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .todo-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: var(--light-gray);
+            border-radius: 15px;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .todo-item:hover {
+            border-color: var(--light-blue);
+            transform: translateX(5px);
+        }
+
+        .todo-item.completed {
+            opacity: 0.7;
+            text-decoration: line-through;
+        }
+
+        .todo-text {
+            flex: 1;
+            margin: 0 15px;
+            font-size: 1rem;
+        }
+
+        .todo-btn {
+            background: var(--secondary-blue);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .todo-btn:hover {
+            background: var(--dark-blue);
+            transform: scale(1.1);
+        }
+
+        /* Grade Calculator */
+        .grade-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--light-blue);
+            border-radius: 10px;
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+
+        .grade-result {
+            background: var(--light-blue);
+            padding: 15px;
+            border-radius: 15px;
+            text-align: center;
+            font-weight: bold;
+            margin-top: 15px;
+            color: var(--dark-blue);
+        }
+
+        /* Game Specific Styles */
+        .game-board {
+            background: var(--light-gray);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 15px 0;
+            border: 2px solid var(--light-blue);
+        }
+
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+
+        .memory-card {
+            aspect-ratio: 1;
+            background: var(--secondary-blue);
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--white);
+            transition: all 0.3s ease;
+        }
+
+        .memory-card.flipped {
+            background: var(--white);
+            color: var(--dark-blue);
+            border: 2px solid var(--primary-blue);
+        }
+
+        .memory-card.matched {
+            background: var(--success);
+            color: var(--white);
+        }
+
+        .snake-canvas {
+            border: 2px solid var(--primary-blue);
+            border-radius: 10px;
+            background: var(--white);
+        }
+
+        .quiz-question {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 15px 0;
+            border: 2px solid var(--light-blue);
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .quiz-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .quiz-option {
+            background: var(--white);
+            border: 2px solid var(--light-blue);
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .quiz-option:hover {
+            background: var(--light-blue);
+            transform: scale(1.02);
+        }
+
+        .quiz-option.correct {
+            background: var(--success);
+            color: var(--white);
+        }
+
+        .quiz-option.wrong {
+            background: var(--danger);
+            color: var(--white);
+        }
+
+        .game-score {
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--primary-blue);
+            margin: 10px 0;
+        }
+
+        .game-highscore {
+            text-align: center;
+            font-size: 1rem;
+            color: var(--medium-gray);
+            margin: 5px 0;
+        }
+
+        .tic-tac-toe-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 5px;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+
+        .tic-tac-toe-cell {
+            aspect-ratio: 1;
+            background: var(--white);
+            border: 2px solid var(--primary-blue);
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .tic-tac-toe-cell:hover {
+            background: var(--light-blue);
+        }
+
+        .reaction-test {
+            text-align: center;
+            padding: 40px;
+            border-radius: 15px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .reaction-test.waiting {
+            background: var(--warning);
+            color: var(--white);
+        }
+
+        .reaction-test.ready {
+            background: var(--success);
+            color: var(--white);
+        }
+
+        .reaction-test.too-early {
+            background: var(--danger);
+            color: var(--white);
+        }
+
+        .color-match-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .color-match-item {
+            aspect-ratio: 1;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+        }
+
+        .color-match-item:hover {
+            transform: scale(1.05);
+            border-color: var(--dark-blue);
+        }
+
+        .simon-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+
+        .simon-button {
+            aspect-ratio: 1;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0.7;
+        }
+
+        .simon-button.active {
+            opacity: 1;
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(255,255,255,0.5);
+        }
+
+        .simon-button.red { background: #ef4444; }
+        .simon-button.blue { background: #3b82f6; }
+        .simon-button.green { background: #10b981; }
+        .simon-button.yellow { background: #f59e0b; }
+
+        .rps-choices {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .rps-choice {
+            background: var(--white);
+            border: 2px solid var(--primary-blue);
+            border-radius: 15px;
+            padding: 20px;
+            cursor: pointer;
+            font-size: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .rps-choice:hover {
+            background: var(--light-blue);
+            transform: scale(1.1);
+        }
+
+        .rps-result {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        /* Chatbot Styles */
+        .chatbot-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--white);
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(37, 99, 235, 0.1);
+            overflow: hidden;
+        }
+
+        .chatbot-header {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: var(--white);
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .chatbot-header h3 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .chatbot-subtitle {
+            margin: 0.5rem 0 0 0;
+            opacity: 0.9;
+            font-size: 1rem;
+        }
+
+        .chat-messages {
+            height: 400px;
+            overflow-y: auto;
+            padding: 1rem;
+            background: var(--light-gray);
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 0.8rem 1.2rem;
+            border-radius: 18px;
+            word-wrap: break-word;
+            animation: messageSlide 0.3s ease-out;
+        }
+
+        @keyframes messageSlide {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message.user {
+            background: var(--primary-blue);
+            color: var(--white);
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message.assistant {
+            background: var(--white);
+            color: var(--dark-gray);
+            align-self: flex-start;
+            border: 1px solid var(--light-blue);
+            border-bottom-left-radius: 4px;
+        }
+
+        .message.system {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: var(--white);
+            align-self: center;
+            font-style: italic;
+            font-size: 0.9rem;
+            max-width: 90%;
+        }
+
+        .chat-input-container {
+            padding: 1rem;
+            background: var(--white);
+            border-top: 1px solid var(--light-blue);
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 0.8rem 1rem;
+            border: 2px solid var(--light-blue);
+            border-radius: 25px;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .chat-input:focus {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .chat-send-btn {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: var(--white);
+            border: none;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        .chat-send-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+        }
+
+        .chat-send-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .typing-indicator {
+            display: none;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.8rem 1.2rem;
+            background: var(--white);
+            border: 1px solid var(--light-blue);
+            border-radius: 18px;
+            border-bottom-left-radius: 4px;
+            align-self: flex-start;
+            max-width: 80%;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--medium-gray);
+            border-radius: 50%;
+            animation: typingBounce 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes typingBounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+
+        .quick-suggestions {
+            padding: 1rem;
+            background: var(--light-gray);
+            border-top: 1px solid var(--light-blue);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .suggestion-btn {
+            background: var(--white);
+            border: 1px solid var(--light-blue);
+            border-radius: 20px;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            color: var(--dark-gray);
+        }
+
+        .suggestion-btn:hover {
+            background: var(--light-blue);
+            transform: translateY(-1px);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-menu {
+                gap: 1rem;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .tools-grid, .games-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .quiz-options {
+                grid-template-columns: 1fr;
+            }
+
+            .rps-choices {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav">
+            <div class="logo">📚 Moritz' School Tools</div>
+            <ul class="nav-menu">
+                <li><a href="#" class="nav-link active" data-section="tools">Tools</a></li>
+                <li><a href="#" class="nav-link" data-section="games">Spiele</a></li>
+                <li><a href="#" class="nav-link" data-section="chatbot">AI-Assistent</a></li>
+				<li><a href="about.html"  >Über Mich</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Willkommen bei Moritz' School Tools</h1>
+            <p>Deine zentrale Anlaufstelle für alle schulischen Bedürfnisse - von praktischen Tools bis hin zu unterhaltsamen Lernspielen!</p>
+        </div>
+    </section>
+
+    <!-- Tools Section -->
+    <section class="section active" id="tools-section">
+        <div class="section-header">
+            <h2 class="section-title">Deine Lern-Tools</h2>
+            <p class="section-subtitle">Praktische Werkzeuge für deinen Schulalltag</p>
+        </div>
+
+        <div class="tools-grid">
+            <!-- Calculator -->
+            <div class="tool-card">
+                <div class="tool-header">
+                    <div class="tool-icon">🔢</div>
+                    <h3 class="tool-title">Taschenrechner</h3>
+                </div>
+                <div class="tool-content">
+                    <div class="calculator">
+                        <div class="calc-display" id="calc-display">0</div>
+                        <button class="calc-btn" onclick="clearCalc()">C</button>
+                        <button class="calc-btn" onclick="deleteLast()">⌫</button>
+                        <button class="calc-btn operator" onclick="appendToCalc('/')">/</button>
+                        <button class="calc-btn operator" onclick="appendToCalc('*')">×</button>
+                        <button class="calc-btn" onclick="appendToCalc('7')">7</button>
+                        <button class="calc-btn" onclick="appendToCalc('8')">8</button>
+                        <button class="calc-btn" onclick="appendToCalc('9')">9</button>
+                        <button class="calc-btn operator" onclick="appendToCalc('-')">-</button>
+                        <button class="calc-btn" onclick="appendToCalc('4')">4</button>
+                        <button class="calc-btn" onclick="appendToCalc('5')">5</button>
+                        <button class="calc-btn" onclick="appendToCalc('6')">6</button>
+                        <button class="calc-btn operator" onclick="appendToCalc('+')">+</button>
+                        <button class="calc-btn" onclick="appendToCalc('1')">1</button>
+                        <button class="calc-btn" onclick="appendToCalc('2')">2</button>
+                        <button class="calc-btn" onclick="appendToCalc('3')">3</button>
+                        <button class="calc-btn operator" onclick="calculateResult()" style="grid-row: span 2;">=</button>
+                        <button class="calc-btn" onclick="appendToCalc('0')" style="grid-column: span 2;">0</button>
+                        <button class="calc-btn" onclick="appendToCalc('.')">.</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Timer -->
+            <div class="tool-card">
+                <div class="tool-header">
+                    <div class="tool-icon">⏰</div>
+                    <h3 class="tool-title">Lern-Timer</h3>
+                </div>
+                <div class="tool-content">
+                    <div class="timer-display" id="timer-display">25:00</div>
+                    <div class="timer-controls">
+                        <input type="number" class="timer-input" id="timer-minutes" value="25" min="1" max="120">
+                        <span>Minuten</span>
+                        <button class="timer-btn" onclick="startTimer()">Start</button>
+                        <button class="timer-btn" onclick="pauseTimer()">Pause</button>
+                        <button class="timer-btn" onclick="resetTimer()">Reset</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Todo List -->
+            <div class="tool-card">
+                <div class="tool-header">
+                    <div class="tool-icon">📝</div>
+                    <h3 class="tool-title">Aufgaben-Liste</h3>
+                </div>
+                <div class="tool-content">
+                    <input type="text" class="todo-input" id="todo-input" placeholder="Neue Aufgabe eingeben..." onkeypress="if(event.key==='Enter') addTodo()">
+                    <div class="todo-list" id="todo-list"></div>
+                </div>
+            </div>
+
+            <!-- Grade Calculator -->
+            <div class="tool-card">
+                <div class="tool-header">
+                    <div class="tool-icon">📊</div>
+                    <h3 class="tool-title">Noten-Rechner</h3>
+                </div>
+                <div class="tool-content">
+                    <input type="text" class="grade-input" id="grade-input" placeholder="Noten eingeben (z.B. 1,2,3,1)" onkeypress="if(event.key==='Enter') calculateGrade()">
+                    <button class="timer-btn" onclick="calculateGrade()">Durchschnitt berechnen</button>
+                    <div class="grade-result" id="grade-result"></div>
+                </div>
+            </div>
+
+            <!-- Random Generator -->
+            <div class="tool-card">
+                <div class="tool-header">
+                    <div class="tool-icon">🎲</div>
+                    <h3 class="tool-title">Zufallsgenerator</h3>
+                </div>
+                <div class="tool-content">
+                    <div class="random-controls">
+                        <button class="timer-btn" onclick="generatePassword()">Passwort</button>
+                        <button class="timer-btn" onclick="generateNumber()">Zahl 1-100</button>
+                        <button class="timer-btn" onclick="flipCoin()">Münzwurf</button>
+                        <button class="timer-btn" onclick="rollDice()">Würfel</button>
+                    </div>
+                    <div class="random-result" id="random-result">Klicke einen Button für ein zufälliges Ergebnis!</div>
+                </div>
+            </div>
+
+            <!-- Unit Converter -->
+            <div class="tool-card">
+                <div class="tool-header">
+                    <div class="tool-icon">⚖️</div>
+                    <h3 class="tool-title">Einheiten-Umrechner</h3>
+                </div>
+                <div class="tool-content">
+                    <select class="grade-input" id="unit-type" onchange="updateUnitOptions()">
+                        <option value="length">Länge</option>
+                        <option value="weight">Gewicht</option>
+                        <option value="temperature">Temperatur</option>
+                        <option value="volume">Volumen</option>
+                    </select>
+                    <div style="display: flex; gap: 10px; align-items: center; margin: 10px 0;">
+                        <input type="number" class="grade-input" id="unit-input" placeholder="Wert eingeben" style="flex: 1;" onkeypress="if(event.key==='Enter') convertUnit()">
+                        <select class="grade-input" id="unit-from" style="flex: 1;"></select>
+                        <span>→</span>
+                        <select class="grade-input" id="unit-to" style="flex: 1;"></select>
+                    </div>
+                    <button class="timer-btn" onclick="convertUnit()">Umrechnen</button>
+                    <div class="grade-result" id="unit-result"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Games Section -->
+    <section class="section games-section" id="games-section">
+        <div class="section-header">
+            <h2 class="section-title">Lernspiele</h2>
+            <p class="section-subtitle">Spielend lernen und Spaß haben!</p>
+        </div>
+
+        <div class="games-grid">
+            <!-- Memory Game -->
+            <div class="game-card">
+                <div class="game-header">
+                    <div class="game-icon">🧠</div>
+                    <h3 class="game-title">Gedächtnisspiel</h3>
+                </div>
+                <div class="game-content">
+                    <div class="game-score">Züge: <span id="memory-moves">0</span></div>
+                    <div class="game-highscore">Bestes Ergebnis: <span id="memory-highscore">-</span> Züge</div>
+                    <div class="game-board">
+                        <div class="memory-grid" id="memory-grid"></div>
+                    </div>
+                    <div class="game-controls">
+                        <button class="game-btn" onclick="initMemoryGame()">Neues Spiel</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Snake Game -->
+            <div class="game-card">
+                <div class="game-header">
+                    <div class="game-icon">🐍</div>
+                    <h3 class="game-title">Schlangen-Spiel</h3>
+                </div>
+                <div class="game-content">
+                    <div class="game-score">Punkte: <span id="snake-score">0</span></div>
+                    <div class="game-highscore">Highscore: <span id="snake-highscore">0</span></div>
+                    <div class="game-board">
+                        <canvas id="snake-canvas" class="snake-canvas" width="300" height="300"></canvas>
+                    </div>
+                    <div class="game-controls">
+                        <button class="game-btn" onclick="startSnakeGame()">Start</button>
+                        <button class="game-btn" onclick="pauseSnakeGame()">Pause</button>
+                    </div>
+                    <p style="text-align: center; font-size: 0.9rem; color: var(--medium-gray); margin-top: 10px;">
+                        Steuerung: Pfeiltasten
+                    </p>
+                </div>
+            </div>
+
+            <!-- Math Quiz -->
+            <div class="game-card">
+                <div class="game-header">
+                    <div class="game-icon">🔢</div>
+                    <h3 class="game-title">Mathe-Quiz</h3>
+                </div>
+                <div class="game-content">
+                    <div class="game-score">Punkte: <span id="quiz-score">0</span></div>
+                    <div class="game-highscore">Highscore: <span id="quiz-highscore">0</span></div>
+                    <div class="quiz-question" id="quiz-question">Klicke auf "Start" um zu beginnen!</div>
+                    <div class="quiz-options" id="quiz-options"></div>
+                    <div class="game-controls">
+                        <button class="game-btn" onclick="startMathQuiz()">Start</button>
+                        <button class="game-btn" onclick="nextQuestion()">Nächste Frage</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Word Guessing -->
+            <div class="game-card">
+                <div class="game-header">
+                    <div class="game-icon">📝</div>
+                    <h3 class="game-title">Wörter raten</h3>
+                </div>
+                <div class="game-content">
+                    <div class="game-score">Versuche: <span id="word-attempts">0</span></div>
+                    <div class="game-highscore">Beste Wortlänge: <span id="word-highscore">0</span> Buchstaben</div>
+                    <div class="game-board">
+                        <div id="word-display" style="font-size: 2rem; text-align: center; margin: 20px 0; font-family: monospace;">_ _ _ _ _</div>
+                        <input type="text" id="word-input" style="width: 100%; padding: 15px; font-size: 1.2rem; text-align: center; border: 2px solid var(--light-blue); border-radius: 10px;" placeholder="Buchstabe eingeben" maxlength="1" onkeypress="if(event.key==='Enter') guessLetter()">
+                        <div id="word-guessed" style="margin: 15px 0; text-align: center; color: var(--medium-gray);">Geratene Buchstaben: </div>
+                    </div>
+                    <div class="game-controls">
+                        <button class="game-btn" onclick="initWordGame()">Neues Wort</button>
+                        <button class="game-btn" onclick="guessLetter()">Raten</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reaction Test -->
+            <div class="game-card">
+                <div class="game-header">
+                    <div class="game-icon">⚡</div>
+                    <h3 class="game-title">Reaktionstest</h3>
+                </div>
+                <div class="game-content">
+                    <div class="game-score">Letzte Zeit: <span id="reaction-time">-</span> ms</div>
+                    <div class="game-highscore">Beste Zeit: <span id="reaction-highscore">-</span> ms</div>
+                    <div class="reaction-test waiting" id="reaction-area" onclick="handleReactionClick()">
+                        Klicke hier wenn der Bereich grün wird!
+                    </div>
+                    <div class="game-controls">
+                        <button class="game-btn" onclick="startReactionTest()">Test starten</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Color Matching -->
+            <div class="game-card">
+                <div class="game-header">
+                    <div class="game-icon">🎨</div>
+                    <h3 class="game-title">Farben zuordnen</h3>
+                </div>
+                <div class="game-content">
+                    <div class="game-score">Punkte: <span id="color-score">0</span></div>
+                    <div class="game-highscore">Highscore: <span id="color-highscore">0</span></div>
+                    <div id="color-target" style="text-align: center; font-size: 1.5rem; font-weight: bold; margin: 15px 0;">Klicke die Farbe: BLAU</div>
+                    <div class="color-match-grid" id="color-grid"></div>
+                    <div class="game-controls">
+                        <button class="game-btn" onclick="initColorGame()">Neues Spiel</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Number Sequence -->
+            <div class="game-card">
+                <div class="game-header">
+                    <div class="game-icon">🔢</div>
+                    <h3 class="game-title">Zahlenfolge</h3>
+                </div>
+                <div class="game-content">
+                    <div class="game-score">Level: <span id="sequence-level">1</span></div>
+                    <div class="game-highscore">Höchstes Level: <span id="sequence-highscore">1</span></div>
+                    <div id="sequence-display" style="font-size: 2rem; text-align: center; margin: 20px 0; min-height: 60px; display: flex; align-items: center; justify-content: center;"></div>
+                    <input type="number" id="sequence-input" style="width: 100%; padding: 15px; font-size: 1.2rem; text-align: center; border: 2px solid var(--light-blue); border-radius: 10px;" placeholder="Nächste Zahl eingeben">
+                    <div class="game-controls">
+                        <button class="game-btn" onclick="initSequenceGame()">Start</button>
+                        <button class="game-btn" onclick="checkSequence()">Prüfen</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Simon Says -->
+            <div class="game-card">
+                <div class="game-header">
+                    <div class="game-icon">🎵</div>
+                    <h3 class="game-title">Simon sagt</h3>
+                </div>
+                <div class="game-content">
+                    <div class="game-score">Runde: <span id="simon-round">0</span></div>
+                    <div class="game-highscore">Beste Runde: <span id="simon-highscore">0</span></div>
+                    <div class="simon-grid" id="simon-grid">
+                        <div class="simon-button red" data-color="red"></div>
+                        <div class="simon-button blue" data-color="blue"></div>
+                        <div class="simon-button green" data-color="green"></div>
+                        <div class="simon-button yellow" data-color="yellow"></div>
+                    </div>
+                    <div class="game-controls">
+                        <button class="game-btn" onclick="startSimonGame()">Start</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tic Tac Toe -->
+            <div class="game-card">
+                <div class="game-header">
+                    <div class="game-icon">⭕</div>
+                    <h3 class="game-title">Drei gewinnt</h3>
+                </div>
+                <div class="game-content">
+                    <div class="game-score">Spieler: <span id="ttt-player">X</span></div>
+                    <div class="game-highscore">Siege: <span id="ttt-wins">0</span></div>
+                    <div class="tic-tac-toe-grid" id="ttt-grid"></div>
+                    <div class="game-controls">
+                        <button class="game-btn" onclick="initTicTacToe()">Neues Spiel</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rock Paper Scissors -->
+            <div class="game-card">
+                <div class="game-header">
+                    <div class="game-icon">✂️</div>
+                    <h3 class="game-title">Schere Stein Papier</h3>
+                </div>
+                <div class="game-content">
+                    <div class="game-score">Siege: <span id="rps-wins">0</span> | Niederlagen: <span id="rps-losses">0</span></div>
+                    <div class="rps-choices">
+                        <div class="rps-choice" onclick="playRPS('rock')">🪨</div>
+                        <div class="rps-choice" onclick="playRPS('paper')">📄</div>
+                        <div class="rps-choice" onclick="playRPS('scissors')">✂️</div>
+                    </div>
+                    <div class="rps-result" id="rps-result">Wähle deine Waffe!</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Chatbot Section -->
+    <section class="section" id="chatbot-section">
+        <div class="section-header">
+            <h2 class="section-title">AI-Lernassistent</h2>
+            <p class="section-subtitle">Dein persönlicher KI-Tutor für alle Fragen rund um die Schule</p>
+        </div>
+
+        <div class="chatbot-container">
+            <div class="chatbot-header">
+                <h3>🤖 Moritz' AI-Assistent</h3>
+                <p class="chatbot-subtitle">Frag mich alles zu Mathe, Deutsch, Englisch, Naturwissenschaften und mehr!</p>
+            </div>
+            
+            <div class="chat-messages" id="chat-messages">
+                <div class="message system">
+                    Hallo! Ich bin dein persönlicher Lernassistent. Ich kann dir bei Hausaufgaben helfen, Konzepte erklären, Übungsaufgaben erstellen und alle deine Schulfragen beantworten. Wie kann ich dir heute helfen?
+                </div>
+            </div>
+            
+            <div class="typing-indicator" id="typing-indicator">
+                <span>AI tippt</span>
+                <div class="typing-dots">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+            </div>
+            
+            <div class="quick-suggestions">
+                <button class="suggestion-btn" onclick="sendSuggestion('Erkläre mir Pythagoras')">Erkläre mir Pythagoras</button>
+                <button class="suggestion-btn" onclick="sendSuggestion('Hilf mir bei Deutsch-Grammatik')">Hilf mir bei Deutsch-Grammatik</button>
+                <button class="suggestion-btn" onclick="sendSuggestion('Erstelle Mathe-Übungen für mich')">Erstelle Mathe-Übungen</button>
+                <button class="suggestion-btn" onclick="sendSuggestion('Erkläre photosynthese')">Erkläre Photosynthese</button>
+                <button class="suggestion-btn" onclick="sendSuggestion('Hilf mir beim Englisch lernen')">Hilf mir beim Englisch lernen</button>
+            </div>
+            
+            <div class="chat-input-container">
+                <input type="text" class="chat-input" id="chat-input" placeholder="Stelle deine Frage..." onkeypress="if(event.key==='Enter') sendMessage()">
+                <button class="chat-send-btn" id="chat-send-btn" onclick="sendMessage()">
+                    ➤
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Navigation
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const sectionName = link.dataset.section;
+                
+                // Update active nav link
+                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+                
+                // Show/hide sections
+                document.querySelectorAll('.section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                document.getElementById(sectionName + '-section').classList.add('active');
+            });
+        });
+
+        // Calculator
+        let calcDisplay;
+        let calcInput = '0';
+        let operator = '';
+        let firstOperand = '';
+        let waitingForOperand = false;
+
+        function appendToCalc(value) {
+            if (['+', '-', '*', '/'].includes(value)) {
+                if (firstOperand === '') {
+                    firstOperand = calcInput;
+                } else if (operator) {
+                    const result = calculateInternal();
+                    calcInput = result.toString();
+                    firstOperand = calcInput;
+                }
+                operator = value;
+                waitingForOperand = true;
+            } else {
+                if (waitingForOperand) {
+                    calcInput = value;
+                    waitingForOperand = false;
+                } else {
+                    calcInput = calcInput === '0' ? value : calcInput + value;
+                }
+            }
+            updateCalcDisplay();
+        }
+
+        function clearCalc() {
+            calcInput = '0';
+            operator = '';
+            firstOperand = '';
+            waitingForOperand = false;
+            updateCalcDisplay();
+        }
+
+        function deleteLast() {
+            calcInput = calcInput.length > 1 ? calcInput.slice(0, -1) : '0';
+            updateCalcDisplay();
+        }
+
+        function calculateResult() {
+            if (firstOperand === '' || operator === '') return;
+            
+            const result = calculateInternal();
+            calcInput = result.toString();
+            operator = '';
+            firstOperand = '';
+            waitingForOperand = true;
+            updateCalcDisplay();
+        }
+
+        function calculateInternal() {
+            const prev = parseFloat(firstOperand);
+            const current = parseFloat(calcInput);
+
+            switch (operator) {
+                case '+': return prev + current;
+                case '-': return prev - current;
+                case '*': return prev * current;
+                case '/': return current !== 0 ? prev / current : 0;
+                default: return current;
+            }
+        }
+
+        function updateCalcDisplay() {
+            if (calcDisplay) {
+                calcDisplay.textContent = calcInput;
+            }
+        }
+
+        // Timer
+        let timerInterval;
+        let timerSeconds = 0;
+        let timerActive = false;
+
+        function startTimer() {
+            if (!timerActive) {
+                const minutes = parseInt(document.getElementById('timer-minutes').value);
+                timerSeconds = minutes * 60;
+                timerActive = true;
+                timerInterval = setInterval(updateTimer, 1000);
+            }
+        }
+
+        function pauseTimer() {
+            timerActive = false;
+            clearInterval(timerInterval);
+        }
+
+        function resetTimer() {
+            pauseTimer();
+            const minutes = parseInt(document.getElementById('timer-minutes').value);
+            timerSeconds = minutes * 60;
+            updateTimerDisplay();
+        }
+
+        function updateTimer() {
+            if (timerSeconds <= 0) {
+                pauseTimer();
+                alert('Timer abgelaufen!');
+                return;
+            }
+            timerSeconds--;
+            updateTimerDisplay();
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timerSeconds / 60);
+            const seconds = timerSeconds % 60;
+            document.getElementById('timer-display').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        // Todo List
+        let todos = JSON.parse(localStorage.getItem('todos')) || [];
+
+        function addTodo() {
+            const input = document.getElementById('todo-input');
+            const text = input.value.trim();
+            if (text) {
+                todos.push({ id: Date.now(), text, completed: false });
+                input.value = '';
+                saveTodos();
+                renderTodos();
+            }
+        }
+
+        function toggleTodo(id) {
+            todos = todos.map(todo => 
+                todo.id === id ? { ...todo, completed: !todo.completed } : todo
+            );
+            saveTodos();
+            renderTodos();
+        }
+
+        function deleteTodo(id) {
+            todos = todos.filter(todo => todo.id !== id);
+            saveTodos();
+            renderTodos();
+        }
+
+        function saveTodos() {
+            localStorage.setItem('todos', JSON.stringify(todos));
+        }
+
+        function renderTodos() {
+            const todoList = document.getElementById('todo-list');
+            todoList.innerHTML = todos.map(todo => `
+                <div class="todo-item ${todo.completed ? 'completed' : ''}">
+                    <input type="checkbox" ${todo.completed ? 'checked' : ''} 
+                           onchange="toggleTodo(${todo.id})">
+                    <span class="todo-text">${todo.text}</span>
+                    <button class="todo-btn" onclick="deleteTodo(${todo.id})">Löschen</button>
+                </div>
+            `).join('');
+        }
+
+        // Grade Calculator
+        function calculateGrade() {
+            const input = document.getElementById('grade-input').value;
+            const grades = input.split(',').map(g => parseFloat(g.trim())).filter(g => !isNaN(g));
+            
+            if (grades.length === 0) {
+                document.getElementById('grade-result').textContent = 'Bitte gebe gültige Noten ein!';
+                return;
+            }
+
+            const average = grades.reduce((sum, grade) => sum + grade, 0) / grades.length;
+            document.getElementById('grade-result').textContent = 
+                `Durchschnitt: ${average.toFixed(2)} (${grades.length} Noten)`;
+        }
+
+        // Random Generator
+        function generatePassword() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*';
+            let password = '';
+            for (let i = 0; i < 12; i++) {
+                password += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            document.getElementById('random-result').textContent = `Passwort: ${password}`;
+        }
+
+        function generateNumber() {
+            const number = Math.floor(Math.random() * 100) + 1;
+            document.getElementById('random-result').textContent = `Zufallszahl: ${number}`;
+        }
+
+        function flipCoin() {
+            const result = Math.random() < 0.5 ? 'Kopf' : 'Zahl';
+            document.getElementById('random-result').textContent = `Münzwurf: ${result} 🪙`;
+        }
+
+        function rollDice() {
+            const result = Math.floor(Math.random() * 6) + 1;
+            document.getElementById('random-result').textContent = `Würfel: ${result} ⚀⚁⚂⚃⚄⚅`.charAt(result + 6);
+        }
+
+        // Unit Converter
+        const unitConversions = {
+            length: {
+                'm': { name: 'Meter', factor: 1 },
+                'cm': { name: 'Zentimeter', factor: 100 },
+                'mm': { name: 'Millimeter', factor: 1000 },
+                'km': { name: 'Kilometer', factor: 0.001 },
+                'in': { name: 'Zoll', factor: 39.3701 },
+                'ft': { name: 'Fuß', factor: 3.28084 }
+            },
+            weight: {
+                'kg': { name: 'Kilogramm', factor: 1 },
+                'g': { name: 'Gramm', factor: 1000 },
+                'mg': { name: 'Milligramm', factor: 1000000 },
+                't': { name: 'Tonne', factor: 0.001 },
+                'lb': { name: 'Pfund', factor: 2.20462 },
+                'oz': { name: 'Unze', factor: 35.274 }
+            },
+            temperature: {
+                'C': { name: 'Celsius', factor: 1 },
+                'F': { name: 'Fahrenheit', factor: 1 },
+                'K': { name: 'Kelvin', factor: 1 }
+            },
+            volume: {
+                'l': { name: 'Liter', factor: 1 },
+                'ml': { name: 'Milliliter', factor: 1000 },
+                'gal': { name: 'Gallone', factor: 0.264172 },
+                'cup': { name: 'Tasse', factor: 4.22675 },
+                'tbsp': { name: 'Esslöffel', factor: 67.628 }
+            }
+        };
+
+        function updateUnitOptions() {
+            const type = document.getElementById('unit-type').value;
+            const fromSelect = document.getElementById('unit-from');
+            const toSelect = document.getElementById('unit-to');
+            
+            fromSelect.innerHTML = '';
+            toSelect.innerHTML = '';
+            
+            Object.keys(unitConversions[type]).forEach(unit => {
+                const option1 = new Option(unitConversions[type][unit].name, unit);
+                const option2 = new Option(unitConversions[type][unit].name, unit);
+                fromSelect.add(option1);
+                toSelect.add(option2);
+            });
+        }
+
+        function convertUnit() {
+            const value = parseFloat(document.getElementById('unit-input').value);
+            const type = document.getElementById('unit-type').value;
+            const fromUnit = document.getElementById('unit-from').value;
+            const toUnit = document.getElementById('unit-to').value;
+            
+            if (isNaN(value)) {
+                document.getElementById('unit-result').textContent = 'Bitte gebe einen gültigen Wert ein!';
+                return;
+            }
+
+            let result;
+            if (type === 'temperature') {
+                result = convertTemperature(value, fromUnit, toUnit);
+            } else {
+                const fromFactor = unitConversions[type][fromUnit].factor;
+                const toFactor = unitConversions[type][toUnit].factor;
+                result = (value / fromFactor) * toFactor;
+            }
+
+            document.getElementById('unit-result').textContent = 
+                `${value} ${unitConversions[type][fromUnit].name} = ${result.toFixed(4)} ${unitConversions[type][toUnit].name}`;
+        }
+
+        function convertTemperature(value, from, to) {
+            if (from === to) return value;
+            
+            // Convert to Celsius first
+            let celsius = value;
+            if (from === 'F') celsius = (value - 32) * 5/9;
+            if (from === 'K') celsius = value - 273.15;
+            
+            // Convert from Celsius to target
+            if (to === 'F') return celsius * 9/5 + 32;
+            if (to === 'K') return celsius + 273.15;
+            return celsius;
+        }
+
+        // Memory Game
+        let memoryCards = [];
+        let memoryFlipped = [];
+        let memoryMoves = 0;
+        let memoryCanFlip = true;
+
+        const memorySymbols = ['🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼'];
+
+        function initMemoryGame() {
+            memoryMoves = 0;
+            memoryFlipped = [];
+            memoryCanFlip = true;
+            
+            // Create pairs of symbols
+            memoryCards = [...memorySymbols, ...memorySymbols]
+                .sort(() => Math.random() - 0.5);
+            
+            const grid = document.getElementById('memory-grid');
+            grid.innerHTML = memoryCards.map((symbol, index) => `
+                <div class="memory-card" data-index="${index}" onclick="flipMemoryCard(${index})">
+                    ?
+                </div>
+            `).join('');
+            
+            updateMemoryScore();
+        }
+
+        function flipMemoryCard(index) {
+            if (!memoryCanFlip || memoryFlipped.includes(index)) return;
+            
+            const card = document.querySelector(`[data-index="${index}"]`);
+            card.textContent = memoryCards[index];
+            card.classList.add('flipped');
+            memoryFlipped.push(index);
+            
+            if (memoryFlipped.length === 2) {
+                memoryMoves++;
+                updateMemoryScore();
+                memoryCanFlip = false;
+                
+                setTimeout(() => {
+                    if (memoryCards[memoryFlipped[0]] === memoryCards[memoryFlipped[1]]) {
+                        // Match found
+                        memoryFlipped.forEach(i => {
+                            document.querySelector(`[data-index="${i}"]`).classList.add('matched');
+                        });
+                        
+                        if (document.querySelectorAll('.memory-card.matched').length === 16) {
+                            // Game won
+                            const highscore = localStorage.getItem('memory-highscore');
+                            if (!highscore || memoryMoves < parseInt(highscore)) {
+                                localStorage.setItem('memory-highscore', memoryMoves);
+                                updateMemoryHighscore();
+                            }
+                            setTimeout(() => alert(`Gewonnen in ${memoryMoves} Zügen!`), 500);
+                        }
+                    } else {
+                        // No match
+                        memoryFlipped.forEach(i => {
+                            const card = document.querySelector(`[data-index="${i}"]`);
+                            card.textContent = '?';
+                            card.classList.remove('flipped');
+                        });
+                    }
+                    
+                    memoryFlipped = [];
+                    memoryCanFlip = true;
+                }, 1000);
+            }
+        }
+
+        function updateMemoryScore() {
+            document.getElementById('memory-moves').textContent = memoryMoves;
+        }
+
+        function updateMemoryHighscore() {
+            const highscore = localStorage.getItem('memory-highscore');
+            document.getElementById('memory-highscore').textContent = highscore || '-';
+        }
+
+        // Snake Game
+        let snakeCanvas, snakeCtx;
+        let snake = [{x: 150, y: 150}];
+        let snakeFood = {x: 90, y: 90};
+        let snakeDx = 0, snakeDy = 0;
+        let snakeScore = 0;
+        let snakeGame = false;
+        let snakeInterval;
+
+        function initSnake() {
+            snakeCanvas = document.getElementById('snake-canvas');
+            snakeCtx = snakeCanvas.getContext('2d');
+            updateSnakeHighscore();
+        }
+
+        function startSnakeGame() {
+            if (snakeGame) return;
+            
+            snake = [{x: 150, y: 150}];
+            snakeDx = 0;
+            snakeDy = 0;
+            snakeScore = 0;
+            generateSnakeFood();
+            snakeGame = true;
+            
+            snakeInterval = setInterval(() => {
+                clearSnakeCanvas();
+                moveSnake();
+                drawSnake();
+                drawSnakeFood();
+                updateSnakeScore();
+            }, 200);
+        }
+
+        function pauseSnakeGame() {
+            snakeGame = false;
+            clearInterval(snakeInterval);
+        }
+
+        function moveSnake() {
+            const head = {x: snake[0].x + snakeDx, y: snake[0].y + snakeDy};
+            
+            // Check walls
+            if (head.x < 0 || head.x >= 300 || head.y < 0 || head.y >= 300) {
+                gameOverSnake();
+                return;
+            }
+            
+            // Check self collision
+            if (snake.some(segment => segment.x === head.x && segment.y === head.y)) {
+                gameOverSnake();
+                return;
+            }
+            
+            snake.unshift(head);
+            
+            // Check food
+            if (head.x === snakeFood.x && head.y === snakeFood.y) {
+                snakeScore += 10;
+                generateSnakeFood();
+            } else {
+                snake.pop();
+            }
+        }
+
+        function generateSnakeFood() {
+            snakeFood = {
+                x: Math.floor(Math.random() * 30) * 10,
+                y: Math.floor(Math.random() * 30) * 10
+            };
+        }
+
+        function drawSnake() {
+            snakeCtx.fillStyle = '#2563eb';
+            snake.forEach(segment => {
+                snakeCtx.fillRect(segment.x, segment.y, 10, 10);
+            });
+        }
+
+        function drawSnakeFood() {
+            snakeCtx.fillStyle = '#ef4444';
+            snakeCtx.fillRect(snakeFood.x, snakeFood.y, 10, 10);
+        }
+
+        function clearSnakeCanvas() {
+            snakeCtx.clearRect(0, 0, 300, 300);
+        }
+
+        function gameOverSnake() {
+            pauseSnakeGame();
+            
+            const highscore = localStorage.getItem('snake-highscore') || 0;
+            if (snakeScore > parseInt(highscore)) {
+                localStorage.setItem('snake-highscore', snakeScore);
+                updateSnakeHighscore();
+            }
+            
+            alert(`Game Over! Punkte: ${snakeScore}`);
+        }
+
+        function updateSnakeScore() {
+            document.getElementById('snake-score').textContent = snakeScore;
+        }
+
+        function updateSnakeHighscore() {
+            const highscore = localStorage.getItem('snake-highscore');
+            document.getElementById('snake-highscore').textContent = highscore || '0';
+        }
+
+        // Snake controls
+        document.addEventListener('keydown', (e) => {
+            if (!snakeGame) return;
+            
+            switch(e.key) {
+                case 'ArrowUp': if (snakeDy === 0) { snakeDx = 0; snakeDy = -10; } break;
+                case 'ArrowDown': if (snakeDy === 0) { snakeDx = 0; snakeDy = 10; } break;
+                case 'ArrowLeft': if (snakeDx === 0) { snakeDx = -10; snakeDy = 0; } break;
+                case 'ArrowRight': if (snakeDx === 0) { snakeDx = 10; snakeDy = 0; } break;
+            }
+        });
+
+        // Math Quiz
+        let quizScore = 0;
+        let currentQuestion = {};
+        let quizActive = false;
+
+        function startMathQuiz() {
+            quizScore = 0;
+            quizActive = true;
+            updateQuizScore();
+            nextQuestion();
+        }
+
+        function nextQuestion() {
+            if (!quizActive) return;
+            
+            const operations = ['+', '-', '*'];
+            const operation = operations[Math.floor(Math.random() * operations.length)];
+            let num1, num2, answer;
+            
+            if (operation === '*') {
+                num1 = Math.floor(Math.random() * 10) + 1;
+                num2 = Math.floor(Math.random() * 10) + 1;
+            } else {
+                num1 = Math.floor(Math.random() * 50) + 1;
+                num2 = Math.floor(Math.random() * 50) + 1;
+            }
+            
+            switch(operation) {
+                case '+': answer = num1 + num2; break;
+                case '-': answer = num1 - num2; break;
+                case '*': answer = num1 * num2; break;
+            }
+            
+            currentQuestion = { num1, num2, operation, answer };
+            
+            document.getElementById('quiz-question').textContent = 
+                `${num1} ${operation} ${num2} = ?`;
+            
+            // Generate options
+            const options = [answer];
+            while (options.length < 4) {
+                const wrong = answer + Math.floor(Math.random() * 20) - 10;
+                if (wrong !== answer && !options.includes(wrong)) {
+                    options.push(wrong);
+                }
+            }
+            
+            options.sort(() => Math.random() - 0.5);
+            
+            document.getElementById('quiz-options').innerHTML = options.map(option => 
+                `<button class="quiz-option" onclick="checkQuizAnswer(${option})">${option}</button>`
+            ).join('');
+        }
+
+        function checkQuizAnswer(selected) {
+            const options = document.querySelectorAll('.quiz-option');
+            options.forEach(option => {
+                const value = parseInt(option.textContent);
+                if (value === currentQuestion.answer) {
+                    option.classList.add('correct');
+                } else if (value === selected) {
+                    option.classList.add('wrong');
+                }
+                option.disabled = true;
+            });
+            
+            if (selected === currentQuestion.answer) {
+                quizScore += 10;
+                updateQuizScore();
+            }
+            
+            setTimeout(() => {
+                nextQuestion();
+            }, 1500);
+        }
+
+        function updateQuizScore() {
+            document.getElementById('quiz-score').textContent = quizScore;
+            
+            const highscore = localStorage.getItem('quiz-highscore') || 0;
+            if (quizScore > parseInt(highscore)) {
+                localStorage.setItem('quiz-highscore', quizScore);
+                updateQuizHighscore();
+            }
+        }
+
+        function updateQuizHighscore() {
+            const highscore = localStorage.getItem('quiz-highscore');
+            document.getElementById('quiz-highscore').textContent = highscore || '0';
+        }
+
+        // Word Guessing Game
+        let currentWord = '';
+        let guessedWord = [];
+        let guessedLetters = [];
+        let wordAttempts = 0;
+
+        const words = ['SCHULE', 'LERNEN', 'WISSEN', 'BUCH', 'LEHRER', 'STUDENT', 'PRÜFUNG', 'HAUSAUFGABE', 'MATHEMATIK', 'DEUTSCH'];
+
+        function initWordGame() {
+            currentWord = words[Math.floor(Math.random() * words.length)];
+            guessedWord = Array(currentWord.length).fill('_');
+            guessedLetters = [];
+            wordAttempts = 0;
+            
+            updateWordDisplay();
+            updateWordAttempts();
+            document.getElementById('word-input').value = '';
+        }
+
+        function guessLetter() {
+            const input = document.getElementById('word-input');
+            const letter = input.value.toUpperCase();
+            
+            if (letter && !guessedLetters.includes(letter)) {
+                guessedLetters.push(letter);
+                wordAttempts++;
+                
+                if (currentWord.includes(letter)) {
+                    for (let i = 0; i < currentWord.length; i++) {
+                        if (currentWord[i] === letter) {
+                            guessedWord[i] = letter;
+                        }
+                    }
+                }
+                
+                updateWordDisplay();
+                updateWordAttempts();
+                
+                if (!guessedWord.includes('_')) {
+                    const highscore = localStorage.getItem('word-highscore') || 0;
+                    if (currentWord.length > parseInt(highscore)) {
+                        localStorage.setItem('word-highscore', currentWord.length);
+                        updateWordHighscore();
+                    }
+                    setTimeout(() => alert(`Gewonnen! Das Wort war: ${currentWord}`), 100);
+                }
+                
+                input.value = '';
+            }
+        }
+
+        function updateWordDisplay() {
+            document.getElementById('word-display').textContent = guessedWord.join(' ');
+            document.getElementById('word-guessed').textContent = 
+                'Geratene Buchstaben: ' + guessedLetters.join(', ');
+        }
+
+        function updateWordAttempts() {
+            document.getElementById('word-attempts').textContent = wordAttempts;
+        }
+
+        function updateWordHighscore() {
+            const highscore = localStorage.getItem('word-highscore');
+            document.getElementById('word-highscore').textContent = highscore || '0';
+        }
+
+        // Reaction Test
+        let reactionStartTime = 0;
+        let reactionTimeout;
+        let reactionWaiting = false;
+
+        function startReactionTest() {
+            const area = document.getElementById('reaction-area');
+            area.className = 'reaction-test waiting';
+            area.textContent = 'Warte auf Grün...';
+            reactionWaiting = true;
+            
+            reactionTimeout = setTimeout(() => {
+                area.className = 'reaction-test ready';
+                area.textContent = 'KLICK JETZT!';
+                reactionStartTime = Date.now();
+            }, Math.random() * 3000 + 2000);
+        }
+
+        function handleReactionClick() {
+            const area = document.getElementById('reaction-area');
+            
+            if (area.classList.contains('waiting')) {
+                area.className = 'reaction-test too-early';
+                area.textContent = 'Zu früh! Versuche es nochmal.';
+                clearTimeout(reactionTimeout);
+                reactionWaiting = false;
+                setTimeout(() => {
+                    area.className = 'reaction-test waiting';
+                    area.textContent = 'Klicke hier wenn der Bereich grün wird!';
+                }, 2000);
+            } else if (area.classList.contains('ready')) {
+                const reactionTime = Date.now() - reactionStartTime;
+                document.getElementById('reaction-time').textContent = reactionTime;
+                
+                const highscore = localStorage.getItem('reaction-highscore');
+                if (!highscore || reactionTime < parseInt(highscore)) {
+                    localStorage.setItem('reaction-highscore', reactionTime);
+                    updateReactionHighscore();
+                }
+                
+                area.className = 'reaction-test waiting';
+                area.textContent = `${reactionTime}ms - Klicke für neuen Test`;
+                reactionWaiting = false;
+            } else if (!reactionWaiting) {
+                startReactionTest();
+            }
+        }
+
+        function updateReactionHighscore() {
+            const highscore = localStorage.getItem('reaction-highscore');
+            document.getElementById('reaction-highscore').textContent = highscore || '-';
+        }
+
+        // Color Matching Game
+        let colorScore = 0;
+        let colorTarget = '';
+        const colors = {
+            'ROT': '#ef4444',
+            'BLAU': '#3b82f6',
+            'GRÜN': '#10b981',
+            'GELB': '#f59e0b',
+            'LILA': '#8b5cf6',
+            'ORANGE': '#f97316'
+        };
+
+        function initColorGame() {
+            colorScore = 0;
+            updateColorScore();
+            generateColorChallenge();
+        }
+
+        function generateColorChallenge() {
+            const colorNames = Object.keys(colors);
+            colorTarget = colorNames[Math.floor(Math.random() * colorNames.length)];
+            
+            document.getElementById('color-target').textContent = `Klicke die Farbe: ${colorTarget}`;
+            
+            // Generate grid with random colors
+            const gridColors = [colorTarget];
+            while (gridColors.length < 6) {
+                const randomColor = colorNames[Math.floor(Math.random() * colorNames.length)];
+                if (!gridColors.includes(randomColor)) {
+                    gridColors.push(randomColor);
+                }
+            }
+            
+            gridColors.sort(() => Math.random() - 0.5);
+            
+            document.getElementById('color-grid').innerHTML = gridColors.map(colorName => 
+                `<div class="color-match-item" style="background-color: ${colors[colorName]}" onclick="selectColor('${colorName}')"></div>`
+            ).join('');
+        }
+
+        function selectColor(selectedColor) {
+            if (selectedColor === colorTarget) {
+                colorScore += 10;
+                updateColorScore();
+                generateColorChallenge();
+            } else {
+                colorScore = Math.max(0, colorScore - 5);
+                updateColorScore();
+            }
+        }
+
+        function updateColorScore() {
+            document.getElementById('color-score').textContent = colorScore;
+            
+            const highscore = localStorage.getItem('color-highscore') || 0;
+            if (colorScore > parseInt(highscore)) {
+                localStorage.setItem('color-highscore', colorScore);
+                updateColorHighscore();
+            }
+        }
+
+        function updateColorHighscore() {
+            const highscore = localStorage.getItem('color-highscore');
+            document.getElementById('color-highscore').textContent = highscore || '0';
+        }
+
+        // Number Sequence Game
+        let sequence = [];
+        let sequenceLevel = 1;
+        let sequenceStep = 2;
+
+        function initSequenceGame() {
+            sequenceLevel = 1;
+            updateSequenceLevel();
+            generateSequence();
+        }
+
+        function generateSequence() {
+            sequence = [Math.floor(Math.random() * 10) + 1];
+            for (let i = 1; i < 4 + sequenceLevel; i++) {
+                sequence.push(sequence[i-1] + sequenceStep);
+            }
+            
+            const display = sequence.slice(0, -1).join(', ') + ', ?';
+            document.getElementById('sequence-display').textContent = display;
+            document.getElementById('sequence-input').value = '';
+        }
+
+        function checkSequence() {
+            const userAnswer = parseInt(document.getElementById('sequence-input').value);
+            const correctAnswer = sequence[sequence.length - 1];
+            
+            if (userAnswer === correctAnswer) {
+                sequenceLevel++;
+                sequenceStep = Math.floor(Math.random() * 5) + 1;
+                updateSequenceLevel();
+                
+                const highscore = localStorage.getItem('sequence-highscore') || 1;
+                if (sequenceLevel > parseInt(highscore)) {
+                    localStorage.setItem('sequence-highscore', sequenceLevel);
+                    updateSequenceHighscore();
+                }
+                
+                setTimeout(() => {
+                    generateSequence();
+                }, 1000);
+            } else {
+                alert(`Falsch! Die richtige Antwort war ${correctAnswer}. Neues Spiel startet.`);
+                initSequenceGame();
+            }
+        }
+
+        function updateSequenceLevel() {
+            document.getElementById('sequence-level').textContent = sequenceLevel;
+        }
+
+        function updateSequenceHighscore() {
+            const highscore = localStorage.getItem('sequence-highscore');
+            document.getElementById('sequence-highscore').textContent = highscore || '1';
+        }
+
+        // Simon Says Game
+        let simonSequence = [];
+        let simonPlayerSequence = [];
+        let simonRound = 0;
+        let simonPlaying = false;
+        let simonPlayerTurn = false;
+
+        function startSimonGame() {
+            simonSequence = [];
+            simonPlayerSequence = [];
+            simonRound = 0;
+            simonPlaying = true;
+            simonPlayerTurn = false;
+            
+            updateSimonRound();
+            nextSimonRound();
+        }
+
+        function nextSimonRound() {
+            simonRound++;
+            updateSimonRound();
+            
+            const colors = ['red', 'blue', 'green', 'yellow'];
+            simonSequence.push(colors[Math.floor(Math.random() * colors.length)]);
+            simonPlayerSequence = [];
+            
+            playSimonSequence();
+        }
+
+        function playSimonSequence() {
+            simonPlayerTurn = false;
+            let index = 0;
+            
+            const interval = setInterval(() => {
+                if (index >= simonSequence.length) {
+                    clearInterval(interval);
+                    simonPlayerTurn = true;
+                    return;
+                }
+                
+                const color = simonSequence[index];
+                const button = document.querySelector(`.simon-button.${color}`);
+                button.classList.add('active');
+                
+                setTimeout(() => {
+                    button.classList.remove('active');
+                }, 300);
+                
+                index++;
+            }, 600);
+        }
+
+        function handleSimonClick(color) {
+            if (!simonPlaying || !simonPlayerTurn) return;
+            
+            simonPlayerSequence.push(color);
+            
+            const button = document.querySelector(`.simon-button.${color}`);
+            button.classList.add('active');
+            setTimeout(() => button.classList.remove('active'), 200);
+            
+            const currentIndex = simonPlayerSequence.length - 1;
+            if (simonPlayerSequence[currentIndex] !== simonSequence[currentIndex]) {
+                // Wrong!
+                gameOverSimon();
+                return;
+            }
+            
+            if (simonPlayerSequence.length === simonSequence.length) {
+                // Round complete
+                setTimeout(() => {
+                    nextSimonRound();
+                }, 1000);
+            }
+        }
+
+        function gameOverSimon() {
+            simonPlaying = false;
+            
+            const highscore = localStorage.getItem('simon-highscore') || 0;
+            if (simonRound > parseInt(highscore)) {
+                localStorage.setItem('simon-highscore', simonRound);
+                updateSimonHighscore();
+            }
+            
+            alert(`Game Over! Du hast Runde ${simonRound} erreicht!`);
+        }
+
+        function updateSimonRound() {
+            document.getElementById('simon-round').textContent = simonRound;
+        }
+
+        function updateSimonHighscore() {
+            const highscore = localStorage.getItem('simon-highscore');
+            document.getElementById('simon-highscore').textContent = highscore || '0';
+        }
+
+        // Add Simon button click handlers
+        document.querySelectorAll('.simon-button').forEach(button => {
+            button.addEventListener('click', () => {
+                handleSimonClick(button.dataset.color);
+            });
+        });
+
+        // Tic Tac Toe
+        let tttBoard = Array(9).fill('');
+        let tttCurrentPlayer = 'X';
+        let tttWins = parseInt(localStorage.getItem('ttt-wins')) || 0;
+
+        function initTicTacToe() {
+            tttBoard = Array(9).fill('');
+            tttCurrentPlayer = 'X';
+            
+            const grid = document.getElementById('ttt-grid');
+            grid.innerHTML = Array(9).fill().map((_, index) => 
+                `<div class="tic-tac-toe-cell" onclick="makeTTTMove(${index})"></div>`
+            ).join('');
+            
+            updateTTTPlayer();
+            updateTTTWins();
+        }
+
+        function makeTTTMove(index) {
+            if (tttBoard[index] || checkTTTWinner()) return;
+            
+            tttBoard[index] = tttCurrentPlayer;
+            document.querySelectorAll('.tic-tac-toe-cell')[index].textContent = tttCurrentPlayer;
+            
+            const winner = checkTTTWinner();
+            if (winner) {
+                if (winner === 'X') {
+                    tttWins++;
+                    localStorage.setItem('ttt-wins', tttWins);
+                    updateTTTWins();
+                }
+                setTimeout(() => alert(`${winner} gewinnt!`), 100);
+                return;
+            }
+            
+            if (tttBoard.every(cell => cell)) {
+                setTimeout(() => alert('Unentschieden!'), 100);
+                return;
+            }
+            
+            tttCurrentPlayer = tttCurrentPlayer === 'X' ? 'O' : 'X';
+            updateTTTPlayer();
+            
+            // Simple AI for O
+            if (tttCurrentPlayer === 'O') {
+                setTimeout(() => {
+                    const emptyCells = tttBoard.map((cell, index) => cell === '' ? index : null).filter(cell => cell !== null);
+                    if (emptyCells.length > 0) {
+                        const aiMove = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+                        makeTTTMove(aiMove);
+                    }
+                }, 500);
+            }
+        }
+
+        function checkTTTWinner() {
+            const winPatterns = [
+                [0, 1, 2], [3, 4, 5], [6, 7, 8], // rows
+                [0, 3, 6], [1, 4, 7], [2, 5, 8], // columns
+                [0, 4, 8], [2, 4, 6] // diagonals
+            ];
+            
+            for (let pattern of winPatterns) {
+                const [a, b, c] = pattern;
+                if (tttBoard[a] && tttBoard[a] === tttBoard[b] && tttBoard[a] === tttBoard[c]) {
+                    return tttBoard[a];
+                }
+            }
+            return null;
+        }
+
+        function updateTTTPlayer() {
+            document.getElementById('ttt-player').textContent = tttCurrentPlayer;
+        }
+
+        function updateTTTWins() {
+            document.getElementById('ttt-wins').textContent = tttWins;
+        }
+
+        // Rock Paper Scissors
+        let rpsWins = parseInt(localStorage.getItem('rps-wins')) || 0;
+        let rpsLosses = parseInt(localStorage.getItem('rps-losses')) || 0;
+
+        function playRPS(playerChoice) {
+            const choices = ['rock', 'paper', 'scissors'];
+            const computerChoice = choices[Math.floor(Math.random() * choices.length)];
+            
+            const choiceEmojis = {
+                rock: '🪨',
+                paper: '📄',
+                scissors: '✂️'
+            };
+            
+            let result = '';
+            if (playerChoice === computerChoice) {
+                result = 'Unentschieden!';
+            } else if (
+                (playerChoice === 'rock' && computerChoice === 'scissors') ||
+                (playerChoice === 'paper' && computerChoice === 'rock') ||
+                (playerChoice === 'scissors' && computerChoice === 'paper')
+            ) {
+                result = 'Du gewinnst!';
+                rpsWins++;
+                localStorage.setItem('rps-wins', rpsWins);
+            } else {
+                result = 'Computer gewinnt!';
+                rpsLosses++;
+                localStorage.setItem('rps-losses', rpsLosses);
+            }
+            
+            document.getElementById('rps-result').innerHTML = `
+                Du: ${choiceEmojis[playerChoice]} vs Computer: ${choiceEmojis[computerChoice]}<br>
+                ${result}
+            `;
+            
+            updateRPSScore();
+        }
+
+        function updateRPSScore() {
+            document.getElementById('rps-wins').textContent = rpsWins;
+            document.getElementById('rps-losses').textContent = rpsLosses;
+        }
+
+        // AI Chatbot Implementation
+        let chatMessages = [];
+        let isTyping = false;
+
+        async function sendMessage() {
+            const input = document.getElementById('chat-input');
+            const message = input.value.trim();
+            
+            if (!message || isTyping) return;
+            
+            // Add user message
+            addMessage(message, 'user');
+            input.value = '';
+            
+            // Show typing indicator
+            showTypingIndicator();
+            
+            try {
+                // Call OpenAI API
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        history: chatMessages
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error('API request failed');
+                }
+                
+                const data = await response.json();
+                
+                // Hide typing indicator and add AI response
+                hideTypingIndicator();
+                if (data.fallback) {
+                    addMessage(data.response, 'assistant');
+                    addMessage('📝 Info: Ich arbeite gerade im Offline-Modus. Für erweiterte AI-Funktionen muss das OpenAI-Kontingent aufgeladen werden.', 'system');
+                } else {
+                    addMessage(data.response, 'assistant');
+                }
+                
+            } catch (error) {
+                hideTypingIndicator();
+                addMessage('Entschuldigung, ich kann momentan nicht antworten. Bitte versuche es später erneut.', 'assistant');
+                console.error('Chat error:', error);
+            }
+        }
+
+        function sendSuggestion(text) {
+            document.getElementById('chat-input').value = text;
+            sendMessage();
+        }
+
+        function addMessage(text, sender) {
+            const messagesContainer = document.getElementById('chat-messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            messageDiv.textContent = text;
+            
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            
+            // Store message in history
+            chatMessages.push({ role: sender === 'user' ? 'user' : 'assistant', content: text });
+            
+            // Limit history to last 20 messages
+            if (chatMessages.length > 20) {
+                chatMessages = chatMessages.slice(-20);
+            }
+        }
+
+        function showTypingIndicator() {
+            isTyping = true;
+            document.getElementById('typing-indicator').style.display = 'flex';
+            document.getElementById('chat-send-btn').disabled = true;
+            
+            // Scroll to bottom
+            const messagesContainer = document.getElementById('chat-messages');
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function hideTypingIndicator() {
+            isTyping = false;
+            document.getElementById('typing-indicator').style.display = 'none';
+            document.getElementById('chat-send-btn').disabled = false;
+        }
+
+        // Initialize everything
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize calculator display
+            calcDisplay = document.getElementById('calc-display');
+            updateCalcDisplay();
+            
+            renderTodos();
+            updateMemoryHighscore();
+            updateQuizHighscore();
+            updateWordHighscore();
+            updateReactionHighscore();
+            updateColorHighscore();
+            updateSequenceHighscore();
+            updateSimonHighscore();
+            updateTTTWins();
+            updateRPSScore();
+            
+            initSnake();
+            initMemoryGame();
+            initColorGame();
+            initSequenceGame();
+            initTicTacToe();
+            
+            // Initialize unit converter
+            updateUnitOptions();
+        });
+    </script>
+</body>
+</html>
